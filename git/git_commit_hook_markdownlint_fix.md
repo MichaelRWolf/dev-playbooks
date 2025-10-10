@@ -13,12 +13,21 @@ Set up markdownlint-fix pre-commit hook in this repository:
    - Check if pre-commit is installed
    - If not, provide command: pip install pre-commit
 
-2. Create or update .pre-commit-config.yaml with:
+2. Check for existing changes and stash if needed:
+   - Run: git status --short
+   - If there are any changes (modified, staged, or untracked):
+     - Run: git stash push -u -m "Stashing before markdownlint setup"
+     - Inform user that changes were stashed
+     - User can restore with: git stash pop
+   - If no changes, continue without stashing
+   - This isolates markdownlint setup changes from development work
+
+3. Create or update .pre-commit-config.yaml with:
    - repo: https://github.com/igorshubovych/markdownlint-cli
    - rev: v0.39.0 (or latest)
    - hook id: markdownlint-fix
 
-3. Create .markdownlint.json in project root with ONLY this content:
+4. Create .markdownlint.json in project root with ONLY this content:
    {
      "MD013": false
    }
@@ -29,10 +38,10 @@ Set up markdownlint-fix pre-commit hook in this repository:
    - User will manually fix any remaining errors
    - NEVER hide or suppress errors by adding config rules
 
-4. Install the git hooks:
+5. Install the git hooks:
    - Run: pre-commit install
 
-5. Ask the user what they want to do:
+6. Ask the user what they want to do:
    - "Run hook on staged files only?"
    - "Run hook on all files?"
    - "Skip running hook for now?"
@@ -45,7 +54,7 @@ Set up markdownlint-fix pre-commit hook in this repository:
    - User will fix them manually
    - Do NOT add config rules to suppress the errors
 
-6. Update README.md in project root:
+7. Update README.md in project root:
    - Add "Setup" section if not present
    - Document pre-commit installation steps
    - Document what the hooks do (auto-fix markdown)
@@ -55,7 +64,7 @@ Set up markdownlint-fix pre-commit hook in this repository:
      2. ~/.markdownlint.json (fallback)
      3. Markdownlint defaults (fallback)
 
-7. Show git status to display modified files
+8. Show git status to display modified files
    - User will decide what/when to commit
    - Do NOT stage or commit files automatically
 ```
@@ -74,7 +83,23 @@ pre-commit --version
 pip install pre-commit
 ```
 
-### 2. Create .pre-commit-config.yaml
+### 2. Check for Existing Changes and Stash if Needed
+
+```bash
+# Check if there are any changes
+git status --short
+
+# If there are changes (modified, staged, or untracked), stash them
+git stash push -u -m "Stashing before markdownlint setup"
+
+# Note: You can restore later with: git stash pop
+```
+
+This isolates the markdownlint setup changes from any existing development work.
+
+If there are no changes, skip the stash and continue to the next step.
+
+### 3. Create .pre-commit-config.yaml
 
 Create file in project root:
 
@@ -86,7 +111,7 @@ repos:
       - id: markdownlint-fix
 ```
 
-### 3. Create .markdownlint.json
+### 4. Create .markdownlint.json
 
 Create file in project root with **ONLY** this content:
 
@@ -103,7 +128,7 @@ Create file in project root with **ONLY** this content:
 - All other markdownlint errors should cause commits to **FAIL**
 - You must manually fix remaining errors - don't hide them
 
-### 4. Install Git Hooks
+### 5. Install Git Hooks
 
 ```bash
 pre-commit install
@@ -111,7 +136,7 @@ pre-commit install
 
 This creates `.git/hooks/pre-commit` that runs automatically on every commit.
 
-### 5. Test the Setup (Optional)
+### 6. Test the Setup (Optional)
 
 Choose one based on your needs:
 
@@ -128,7 +153,7 @@ pre-commit run --all-files
 
 If the hook fails with errors, **that's expected and good** - fix the issues manually.
 
-### 6. Update README.md
+### 7. Update README.md
 
 Add this section to your project's README.md:
 
@@ -243,4 +268,4 @@ pre-commit run --all-files --verbose
 
 ## Document History
 
-Last updated: 2025-10-09
+Last updated: 2025-10-10
